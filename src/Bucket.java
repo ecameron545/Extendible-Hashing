@@ -98,14 +98,22 @@ public class Bucket {
 
 				int id = (rec.id % 32) >>> (localDepth);
 
-				if ((1 & id) == 0)
+				if ((1 & id) == 0) {
+					if (left.records[0] == null) {
+						Main.directory.add("1" + code);
+						left.localDepth = left.localDepth + 1;
+					}
 					left.insert(rec);
-				else
+				} else {
+					if (right.records[0] == null) {
+						Main.directory.add("1" + code);
+						right.localDepth = right.localDepth + 1;
+					}
 					right.insert(rec);
+				}
 			}
 
 		} else {
-
 			// this bucket has room so add to this bucket
 			if (!Main.directory.contains(code))
 				Main.directory.add(code);
@@ -132,8 +140,9 @@ public class Bucket {
 							--Main.amountOfBuckets;
 							Main.directory.remove(code);
 							parent.left = null;
-							
-							// if both buckets WILL be null, reset the instance variables
+
+							// if both buckets WILL be null, reset the instance
+							// variables
 							// on the parent bucket
 							if (parent.right == null) {
 								reset(parent);
@@ -176,7 +185,6 @@ public class Bucket {
 			}
 			return;
 
-			
 			// recurse to right bucket
 		} else {
 			int mask = (id % 32) >>> (localDepth);
